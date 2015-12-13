@@ -1,0 +1,38 @@
+---
+- name: clone chinachu repo
+  git:
+    repo=git://github.com/kanreisa/Chinachu.git
+    dest={{ chinachu_app_dir }}
+    accept_hostkey=true
+  tags: chinachu
+
+#- name: create symlink
+#  file: src={{ chinachu_app_dir }}/chinachu dest={{ chinachu_symlink }} state=link
+#  tags: chinachu
+
+- name: copy chinachu_installer.sh
+  copy: src=chinachu_installer.sh dest={{ chinachu_app_dir }} mode=0744
+  tags: chinachu
+
+- name: install chinachu
+  command:
+    ./chinachu_installer.sh
+    chdir={{ chinachu_app_dir }}
+  tags: chinachu
+
+- name: chinachu config
+  template:
+    src=config.json.j2
+    dest={{ chinachu_app_dir }}/config.json
+  tags: chinachu-config
+
+- name: create chinachu recorded directory
+  file:
+    path={{ chinachu_recorded_dir }}
+    state=directory
+  tags: chinachu-config
+
+- name: create empty rules.json
+  shell: echo "[]" > {{ chinachu_app_dir }}/rules.json
+  tags: chinachu-rules
+

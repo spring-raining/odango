@@ -1,0 +1,48 @@
+---
+- name: install build-essential
+  apt: name=build-essential
+  tags: build-essential
+
+- name: install curl
+  apt: name=curl
+  tags: curl
+
+- name: install git
+  apt: name=git
+  tags: git
+
+- name: install libssl-dev
+  apt: name=libssl-dev
+  tags: libssl-dev
+
+- name: install yasm
+  apt: name=yasm
+  tags: yasm
+
+- name: install libtool
+  apt: name=libtool
+  tags: libtool
+
+- name: install autoconf
+  apt: name=autoconf
+  tags: autoconf
+
+- name: install expect
+  apt: name=expect
+  tags: expect
+
+- name: create chinachu user
+  user:
+    name=chinachu
+    password='$6$rounds=656000$0ya.sFlO8ydibINL$wIDDuESUkvgARPko9CwzTx1fwgGFPd767IwpXLOLIQJlNaqEpT..E4vpD4CsD2MG5pzm3gozRDanBp5d5lAP31'
+    home={{ chinachu_home_dir }}
+    shell=/bin/bash
+    groups=sudo
+  tags: chinachu_user
+
+- name: add authorized keys for chinachu
+  authorized_key:
+    user=chinachu
+    key="{{ lookup('file', item) }}"
+  with_items: pre_chinachu_private_key
+  tags: chiachu_user

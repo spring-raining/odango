@@ -1,0 +1,5 @@
+---
+chinachu_home_dir: "/chinachu"
+chinachu_app_dir: "/chinachu/chinachu"
+
+pre_chinachu_private_key: "~/.ssh/id_rsa.pub"

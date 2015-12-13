@@ -1,0 +1,7 @@
+---
+pt1_driver_path: "/tmp/pt1"
+pt1_driver_revision: "ec7c87854f2f"
+pt3_driver_path: "/tmp/pt3"
+pt3_driver_version: "HEAD"
+ptrec_path: "/tmp/stz_ptrec"
+ptrec_version: "HEAD"

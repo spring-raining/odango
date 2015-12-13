@@ -1,0 +1,120 @@
+---
+- name: install make
+  apt: name=make
+  tags: make
+
+- name: install linux-headers
+  apt: name=linux-headers-{{ ansible_kernel }}
+  tags: linux-headers
+
+- name: install pkg-config
+  apt: name=pkg-config
+  tags: pkg-config
+
+- name: install gcc
+  apt: name=gcc
+  tags: gcc
+
+- name: install autoconf
+  apt: name=autoconf
+  tags: autoconf
+
+- name: install mercurial
+  apt: name=mercurial
+  tags: mercurial
+
+- name: install libpcsclite-dev
+  apt: name=libpcsclite-dev
+  tags: libpcsclite-dev
+
+- name: install pcsc-tools
+  apt: name=pcsc-tools
+  tags: pcsc-tools
+
+- name: install pcscd
+  apt: name=pcscd
+  tags: pcscd
+
+- name: clone pt drivers source and rollback b25 decoder source
+  hg:
+    repo=http://hg.honeyplanet.jp/pt1/
+    dest={{ pt1_driver_path }}
+    revision={{ pt1_driver_revision }}
+  tags: driver-b25
+
+- name: make b25 decoder
+  command:
+    make chdir={{ pt1_driver_path }}/arib25
+    creates={{ pt1_driver_path }}/arib25/src/b25
+  tags: driver-b25
+
+- name: make install b25 decoder
+  command:
+    make install chdir={{ pt1_driver_path }}/arib25
+    creates=/usr/local/bin/b25
+  tags: driver-b25
+
+- name: add modprobe
+  shell: echo "blacklist earth-pt1" >> /etc/modprobe.d/blacklist.conf
+  tags: driver
+
+- name: clone driver repository
+  git:
+    repo=https://github.com/m-tsudo/pt3.git
+    dest={{ pt3_driver_path }}
+    version={{ pt3_driver_version }}
+  tags: driver
+
+- name: make driver
+  command:
+    make
+    chdir={{ pt3_driver_path }}
+  tags: driver
+
+- name: make install driver
+  command:
+    make install
+    chdir={{ pt3_driver_path }}
+  tags: driver
+
+- name: clone recpt1-stz repository
+  git:
+    repo=https://github.com/stz2012/recpt1.git
+    dest={{ ptrec_path }}
+    version={{ ptrec_version }}
+  tags: recpt1
+
+- name: gen pt1rec
+  command:
+    ./autogen.sh
+    chdir={{ ptrec_path }}/recpt1
+  tags: recpt1
+
+- name: configure pt1rec
+  command:
+    ./configure --enable-b25
+    chdir={{ ptrec_path }}/recpt1
+  tags: recpt1
+
+- name: make recpt1
+  command:
+    make
+    chdir={{ ptrec_path }}/recpt1
+  tags: recpt1
+
+- name: make install recpt1
+  command:
+    make install
+    chdir={{ ptrec_path }}/recpt1
+  tags: recpt1
+
+# on premises
+
+#- name: reboot
+#  shell: sleep 2s && /sbin/reboot &
+
+#- name: wait for the server to go down (reboot)
+#  local_action: wait_for host={{ inventory_hostname }} port=22 state=stopped
+
+#- name: wait for the server to come up
+#  local_action: wait_for host={{ inventory_hostname }} port=22 delay=60

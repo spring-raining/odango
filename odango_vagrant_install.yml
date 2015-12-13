@@ -1,0 +1,6 @@
+---
+
+- hosts: vagrant
+  user: chinachu
+  roles:
+    - chinachu

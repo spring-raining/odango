@@ -1,0 +1,9 @@
+---
+- hosts: vagrant
+  sudo: true
+  user: vagrant
+  roles:
+    - common
+    - pt
+    - pre_chinachu
+
