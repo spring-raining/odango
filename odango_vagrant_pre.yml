@@ -4,6 +4,7 @@
   user: vagrant
   roles:
     - common
+    - mount_storage
     - pt
     - pre_chinachu
 

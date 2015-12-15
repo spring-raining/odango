@@ -1,0 +1,4 @@
+---
+device_name: "/dev/sdb"
+label_name: "odango-storage"
+mount_point: "/mnt/odango"

@@ -1,0 +1,47 @@
+---
+- name: install parted
+  apt: name=parted
+  tags: parted
+
+- name: install btrfs-tools
+  apt: name=btrfs-tools
+  tags: btrfs-tools
+
+- name: check a storage is mounted
+  command: parted -lm
+  register: result
+  failed_when: "'{{ device_name}}:' not in result.stdout"
+  tags: mount-storage
+
+- name: unmount storage
+  mount:
+    name={{ mount_point }}
+    src="LABEL={{ label_name }}"
+    fstype=btrfs
+    state=unmounted
+  tags: mount-storage
+
+- name: destroy existing partitions
+  command: dd if=/dev/zero of={{ device_name }} bs=1M count=100
+  tags: mount-storage
+
+- name: create GUID partition table
+  command: parted -s -a optimal {{ device_name }} mklabel gpt
+  tags: mount-storage
+
+- name: create partition
+  command: parted -s -a optimal {{ device_name }} -- mkpart primary ext4 1 -1
+  tags: mount-storage
+
+- name: create file system
+  command: mkfs.btrfs -L {{ label_name }} {{ device_name }}1
+  tags: mount-storage
+
+- name: mount partition and update /etc/fstab
+  mount:
+    name={{ mount_point }}
+    src='LABEL={{ label_name }}'
+    fstype=btrfs
+    state=mounted
+  tags: mount-storage
+
