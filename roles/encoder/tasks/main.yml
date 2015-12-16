@@ -1,0 +1,14 @@
+---
+#- name: copy neroAacEnc
+#  copy:
+#    src=neroAacEnc
+#    dest={{ encoder_dir }}/neroAacEnc
+#    mode=755
+#  tags: encoder
+
+- name: generate encode.sh
+  template:
+    src=encode.sh.j2
+    dest={{ encoder_dir }}/encode.sh
+    mode=755
+  tags: encoder

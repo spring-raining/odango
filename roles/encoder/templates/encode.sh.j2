@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# $1  recorded data path
+# $2  program data (JSON)
+
+# Chinachu が持っている ffmpeg を使うことができます。
+# サポートされている動画形式を調べるには:
+# ./chinachu test ffmpeg -formats
+# ./chinachu test ffmpeg -encoders
+
+echo "encode"
+
+nice -n 15 \
+  {{ ffmpeg_path }} -y -i "$1" \
+                    -threads 0 \
+                    -deinterlace \
+                    -f mp4 \
+                    -vcodec libx264 \
+                    -level 31 \
+                    -refs 6 \
+                    -bf 3 \
+                    -r 30000/1001 \
+                    -aspect 16:9 \
+                    -s 1280x720 \
+                    -bufsize 20000k \
+                    -b 1000000 \
+                    -maxrate 2500000 \
+                    "$1.mp4" > "$1.txt" #2>&1
+
+exit
