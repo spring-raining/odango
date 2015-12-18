@@ -1,4 +1,11 @@
 ---
+- name: create encoder directory
+  file:
+    path={{ encoder_dir }}
+    state=directory
+    mode=755
+  tags: encoder
+
 #- name: copy neroAacEnc
 #  copy:
 #    src=neroAacEnc
