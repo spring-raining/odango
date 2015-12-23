@@ -1,7 +1,8 @@
 ---
-
 - hosts: vagrant
   user: chinachu
+  vars_files:
+    - secret_vars.yml
   roles:
     - chinachu
     - encoder

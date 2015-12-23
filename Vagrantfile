@@ -64,7 +64,8 @@ Vagrant.configure(2) do |config|
       "--port", 1,
       "--device", 0,
       "--type", "hdd",
-      "--medium", file_to_disk]
+      "--medium", file_to_disk,
+      "--setuuid", ""]
   end
   #
   # View the documentation for the provider you are using for more

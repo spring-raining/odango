@@ -2,9 +2,12 @@
 - hosts: vagrant
   sudo: true
   user: vagrant
+  vars_files:
+    - secret_vars.yml
   roles:
     - common
     - mount_storage
     - pt
+    - mackerel
     - pre_chinachu
 

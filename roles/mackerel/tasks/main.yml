@@ -1,0 +1,28 @@
+---
+- name: install curl
+  apt: name=curl
+  tags: curl
+
+- name: register mackerel-agent repo
+  shell: curl -fsSL https://mackerel.io/assets/files/scripts/setup-apt.sh | sh
+  tags: mackerel
+
+- name: install mackerel-agent
+  apt: name=mackerel-agent
+  tags: mackerel
+
+- name: configure mackerel-agent
+  lineinfile:
+    dest=/etc/mackerel-agent/mackerel-agent.conf
+    backrefs=yes
+    regexp="^#?\s*apikey"
+    line='apikey = "{{ mackerel_api_key }}"'
+  tags: mackerel
+
+- name: start mackerel-agent
+  service:
+    name=mackerel-agent
+    state=started
+    enabled=yes
+  tags: mackerel
+

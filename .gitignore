@@ -44,5 +44,6 @@ Session.vim
 # My ignore
 
 tmp/
+secret_vars.yml
 
 
