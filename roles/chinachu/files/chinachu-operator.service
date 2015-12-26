@@ -1,0 +1,11 @@
+[Unit]
+Description=starts the chinachu-operator
+After=syslog.target network.target local-fs.target remote-fs.target
+
+[Service]
+User=chinachu
+ExecStart=/chinachu/chinachu/chinachu service operator execute
+ExecStop=/bin/kill -QUIT ${MAINPID}
+
+[Install]
+WantedBy=multi-user.target

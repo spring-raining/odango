@@ -4,7 +4,7 @@
     repo=git://github.com/kanreisa/Chinachu.git
     dest={{ chinachu_app_dir }}
     accept_hostkey=true
-  tags: chinachu
+  tags: chinachu-update
 
 #- name: create symlink
 #  file: src={{ chinachu_app_dir }}/chinachu dest={{ chinachu_symlink }} state=link
@@ -12,13 +12,13 @@
 
 - name: copy chinachu_installer.sh
   copy: src=chinachu_installer.sh dest={{ chinachu_app_dir }} mode=0744
-  tags: chinachu
+  tags: chinachu-update
 
 - name: install chinachu
   command:
     ./chinachu_installer.sh
     chdir={{ chinachu_app_dir }}
-  tags: chinachu
+  tags: chinachu-update
 
 - name: chinachu config
   template:
@@ -36,3 +36,43 @@
   shell: echo "[]" > {{ chinachu_app_dir }}/rules.json
   tags: chinachu-rules
 
+- name: copy chinachu-operator unit file
+  copy:
+    src=chinachu-operator.service
+    dest=/lib/systemd/system/chinachu-operator.service
+    mode=644
+    owner=root
+    group=root
+  sudo: yes
+  tags: chinachu-start
+
+- name: copy chinachu-wui unit file
+  copy:
+    src=chinachu-wui.service
+    dest=/lib/systemd/system/chinachu-wui.service
+    mode=644
+    owner=root
+    group=root
+  sudo: yes
+  tags: chinachu-start
+
+- name: reload systemd
+  command: systemctl daemon-reload
+  sudo: yes
+  tags: chinachu-start
+
+- name: start chinachu-operator
+  service:
+    name=chinachu-operator
+    state=started
+    enabled=yes
+  sudo: yes
+  tags: chinachu-start
+
+- name: start chinachu-wui
+  service:
+    name=chinachu-wui
+    state=started
+    enabled=yes
+  sudo: yes
+  tags: chinachu-start

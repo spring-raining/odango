@@ -10,7 +10,7 @@ Chinachuを構築
 ```bash
 $ vagrant box add debian/jessie64
 $ vagrant up --provision
-$ ansible-playbook -i hosts odango_vagrant_install.yml -vvv
+$ ansible-playbook -i hosts odango_vagrant_install.yml -K -vvv
 ```
 
 #### On-premises
