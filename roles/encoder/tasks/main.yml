@@ -13,6 +13,14 @@
 #    mode=755
 #  tags: encoder
 
+- name: copy odango-encoder.js
+  copy:
+    src=odango-encoder.js
+    dest={{ encoder_dir }}/odango-encoder.js
+    mode=755
+  tags:
+    encoder
+
 - name: generate encode.sh
   template:
     src=encode.sh.j2

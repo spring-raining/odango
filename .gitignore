@@ -5,7 +5,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -45,5 +46,5 @@ Session.vim
 
 tmp/
 secret_vars.yml
-
+.idea/
 

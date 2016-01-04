@@ -1,3 +1,6 @@
 ---
 encoder_dir: /chinachu/encoder
+encoder_log_path: /chinachu/chinachu/log/encoder
 ffmpeg_path: /chinachu/chinachu/usr/bin/ffmpeg
+node_path: /chinachu/chinachu/.nave/node
+output_dir: /mnt/odango

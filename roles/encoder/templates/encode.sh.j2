@@ -8,23 +8,15 @@
 # ./chinachu test ffmpeg -formats
 # ./chinachu test ffmpeg -encoders
 
-echo "encode"
+log={{ encoder_log_path }}
 
-nice -n 15 \
-  {{ ffmpeg_path }} -y -i "$1" \
-                    -threads 0 \
-                    -deinterlace \
-                    -f mp4 \
-                    -vcodec libx264 \
-                    -level 31 \
-                    -refs 6 \
-                    -bf 3 \
-                    -r 30000/1001 \
-                    -aspect 16:9 \
-                    -s 1280x720 \
-                    -bufsize 20000k \
-                    -b 1000000 \
-                    -maxrate 2500000 \
-                    "$1.mp4" > "$1.txt" #2>&1
+export NODE_PATH={{ node_path }}
 
-exit
+{
+    {{ node_path }} {{ encoder_dir}}/odango-encoder.js \
+        -i "$1" \
+        -o "{{ output_dir }}" \
+        -program-data "$2" \
+        -ffmpeg "{{ ffmpeg_path }}"
+
+} >> "$log" 2>&1
