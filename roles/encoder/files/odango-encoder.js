@@ -94,29 +94,34 @@ function encode() {
 
   child_process.exec(
     ffmpeg + ' -y -i "' + path.resolve(input) + '"'
-    + ' -threads 0'
-    + ' -deinterlace'
-    + ' -f mp4'
-    + ' -vcodec libx264'
-    + ' -level 31'
-    + ' -refs 6'
-    + ' -bf 3'
-    + ' -r 30000/1001'
-    + ' -aspect 16:9'
-    + ' -s 1280x720'
-    + ' -bufsize 20000k'
-    + ' -b 1000000'
-    + ' -maxrate 2500000'
-    + ' "' + path.resolve(destDir, destName) + '"',
+           + ' -loglevel error'
+           + ' -threads 0'                 // マルチスレッド化
+           + ' -f mp4'                     // 出力コンテナ
+           + ' -c:v libx264'               // 映像コーデック
+           + ' -c:a libfdk_aac'            // 音声コーデック
+           + ' -b:v 1536k'                 // 映像ビットレート
+           + ' -b:a 192k'                  // 音声ビットレート
+           + ' -r 30000/1001'              // フレームレート (30000/1001 = 29.97fps)
+           + ' -aspect 16:9'               // アスペクト比
+           + ' -s 1280x720'                // 映像サイズ
+           + ' -flags +loop'               // +loop ブロックフィルタ有効化
+           + ' -filter:v yadif'            // インターレース解除
+           + ' -pass 1'                    // 1パスエンコード
+           + ' -level 31'                  // x264レベル (1920x1080では41に)
+           + ' -refs 6'                    // 動き予測用フレーム参照数
+           + ' -bf 3'                      // 最大連続Bフレーム数
+           + ' -ar 48000'                  // 音声サンプリングレート
+           + ' "' + path.resolve(destDir, destName) + '"',
+    { maxBuffer: 1024 * 1024 },
     function(err, stdout, stderr) {
       if (err) {
         util.log(err);
         util.log('encode failed');
       } else {
-        var encodeTime = Date.now() - encodeStart;
         util.log('encode finished: ' + path.resolve(destDir, destName));
-        util.log('    time: ' + formatToHMS(encodeTime))
       }
+      var encodeTime = Date.now() - encodeStart;
+      util.log('    time: ' + formatToHMS(encodeTime));
     }
   );
 }
